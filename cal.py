@@ -374,6 +374,8 @@ class Event(object):
             # We got a localized time, search for the timezone definition
             # we extracted from the calendar and convert to UTC
             tzid = value.params['TZID']
+            if tzid.startswith('"') or tzid.startswith('\''):
+                tzid = tzid[1:-1]
             
             tz = self.tzmap[tzid.lower()]
             dt = datetime.datetime.strptime(value.value, '%Y%m%dT%H%M%S')
