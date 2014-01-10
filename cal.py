@@ -265,8 +265,8 @@ class Event(object):
             self.lines.append(pattern % value)
             self.properties[key] = (value, lineno)
         else:
-            self.properties[key][0] = value
             lineno = self.properties[key][1]
+            self.properties[key] = (value, lineno)
             self.lines[lineno] = pattern % value
 
     def get_uid(self):
