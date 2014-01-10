@@ -72,17 +72,24 @@ class GWConnection:
         ids = self.get_mails_ids( );
         for mail_id in ids:
             event = self.get_event(mail_id)
-            dtstamp = datetime.strptime(event.dtstamp, '%Y%m%dT%H%M%SZ')
-            uid = event.uid
-            if event.gwrecordid is not None:
-                uid = event.gwrecordid
+            if event is not None:
+                fmt = '%Y%m%dT%H%M%SZ'
+                try:
+                    dtstamp = datetime.strptime(event.dtstamp, fmt)
+                except ValueError, e:
+                    # Unfortunately dtstamp is not UTC
+                    fmt = '%Y%m%dT%H%M%S'
+                    dtstamp = datetime.strptime(event.dtstamp, fmt)
+                uid = event.uid
+                if event.gwrecordid is not None:
+                    uid = event.gwrecordid
 
-            if uid is not None:
-                if uid in events and \
-                        datetime.strptime(events[uid].dtstamp, '%Y%m%dT%H%M%SZ') <= dtstamp:
-                    events[uid] = event
-                elif uid not in events:
-                    events[uid] = event
+                if uid is not None:
+                    if uid in events and \
+                            datetime.strptime(events[uid].dtstamp, fmt) <= dtstamp:
+                        events[uid] = event
+                    elif uid not in events:
+                        events[uid] = event
 
         if path is not None:
             dirname = os.path.dirname(path)
