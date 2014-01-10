@@ -376,6 +376,8 @@ class Event(object):
             tzid = value.params['TZID']
             if tzid.startswith('"') or tzid.startswith('\''):
                 tzid = tzid[1:-1]
+            if tzid.startswith('3D'):
+                tzid = tzid[2:]
             
             tz = self.tzmap[tzid.lower()]
             dt = datetime.datetime.strptime(value.value, '%Y%m%dT%H%M%S')
